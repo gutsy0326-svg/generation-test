@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="요즘 유행어 9개 중 몇 개나 알아? 눌러 보고 바로 결과 확인">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://gutsy0326-svg.github.io/generation-test/">
+<meta property="og:title" content="나는 영KK일까? 2026 세대 판별 테스트">
+<meta property="og:description" content="검색 없이 아는 단어만 눌러 봐. 결과와 정답이 바로 나와요.">
+<meta property="og:image" content="https://gutsy0326-svg.github.io/generation-test/og.png">
+<meta property="og:image:width" content="1080">
+<meta property="og:image:height" content="1350">
+<title>나는 영KK일까?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@500;700;900&display=swap">
+<style>
+:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}
+/* 레이아웃: 휴대폰 한 손 폭의 카드 한 장, 단어 타일 3×3을 눌러 체크하고 결과 화면으로 넘어간다 */
+:root {
+  --paper: #FFF4DF;
+  --dot: #EAD9B8;
+  --ink: #17151F;
+  --muted: #5E5770;
+  --white: #FFFFFF;
+  --lime: #C8F560;
+  --sky: #8FD3FF;
+  --lilac: #C3B3FF;
+  --peach: #FFB8A8;
+  --coral: #FF4D3D;
+  --display: 'Black Han Sans', 'Malgun Gothic', sans-serif;
+  --body: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper);
+  background-image: radial-gradient(var(--dot) 1.6px, transparent 1.6px);
+  background-size: 26px 26px;
+  color: var(--ink);
+  font-family: var(--body);
+  padding-block: 24px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  -webkit-tap-highlight-color: transparent;
+}
+.wrap { max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.pill { background: var(--ink); color: var(--lime); font-weight: 900; font-size: 14px; padding: 7px 14px; border-radius: 999px; }
+.count { font-weight: 900; font-size: 14px; border: 3px solid var(--ink); background: var(--white); border-radius: 999px; padding: 4px 12px; font-variant-numeric: tabular-nums; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(44px, 13vw, 64px); line-height: 1.05; margin: 0; letter-spacing: -1px; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--coral); }
+.sub { margin: 0; font-weight: 700; font-size: 16px; color: var(--muted); line-height: 1.5; }
+.sub b { background: var(--ink); color: var(--white); padding: 1px 8px; border-radius: 6px; margin-right: 4px; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.tile {
+  position: relative; min-height: 112px; border: 3px solid var(--ink); border-radius: 18px;
+  box-shadow: 5px 5px 0 var(--ink); font-family: var(--body); font-weight: 900; font-size: clamp(14px, 4.2vw, 19px);
+  line-height: 1.25; letter-spacing: -.5px; color: var(--ink); padding: 26px 6px 10px; cursor: pointer;
+  transition: transform .12s, box-shadow .12s, background-color .12s; word-break: keep-all;
+}
+.tile:nth-child(5n+1) { background: var(--lime); }
+.tile:nth-child(5n+2) { background: var(--sky); }
+.tile:nth-child(5n+3) { background: var(--lilac); }
+.tile:nth-child(5n+4) { background: var(--peach); }
+.tile:nth-child(5n+5) { background: var(--white); }
+.tile .n { position: absolute; top: 8px; left: 9px; width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: var(--white); font-size: 12px; display: grid; place-items: center; }
+.tile .ok { position: absolute; top: 6px; right: 8px; font-size: 12px; font-weight: 900; background: var(--coral); color: var(--white); border: 2px solid var(--ink); border-radius: 999px; padding: 1px 7px; opacity: 0; transform: scale(.6) rotate(-8deg); transition: .15s; }
+.tile[aria-pressed="true"] { transform: translate(4px, 4px); box-shadow: 1px 1px 0 var(--ink); background: var(--ink); color: var(--white); }
+.tile[aria-pressed="true"] .n { background: var(--white); color: var(--ink); }
+.tile[aria-pressed="true"] .ok { opacity: 1; transform: none; }
+.tile:focus-visible, .btn:focus-visible { outline: 3px solid var(--coral); outline-offset: 3px; }
+.hint { margin: -6px 0 0; font-size: 14px; font-weight: 700; color: var(--muted); text-align: center; }
+.btn {
+  display: block; width: 100%; border: 3px solid var(--ink); border-radius: 999px; box-shadow: 5px 5px 0 var(--ink);
+  font-family: var(--body); font-weight: 900; font-size: 18px; padding: 15px 0; cursor: pointer; color: var(--ink); background: var(--white);
+}
+.btn.main { background: var(--coral); color: var(--white); }
+.btn:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 var(--ink); }
+.row { display: flex; gap: 12px; }
+.row .btn { flex: 1; }
+
+.result { background: var(--white); border: 3px solid var(--ink); border-radius: 24px; box-shadow: 6px 6px 0 var(--ink); padding: 22px 20px; display: flex; flex-direction: column; gap: 10px; position: relative; }
+.score { font-family: var(--display); font-size: 72px; line-height: 1; font-variant-numeric: tabular-nums; }
+.score small { font-family: var(--body); font-weight: 900; font-size: 22px; color: var(--muted); margin-left: 4px; }
+.grade { display: inline-block; align-self: flex-start; background: var(--lime); border: 3px solid var(--ink); border-radius: 12px; padding: 4px 14px; font-weight: 900; font-size: 24px; }
+.desc { margin: 0; font-weight: 700; font-size: 16px; color: var(--muted); }
+.scale { display: flex; gap: 4px; margin-top: 6px; }
+.scale span { flex: 1; text-align: center; font-size: 11px; font-weight: 900; padding: 6px 0; border: 2px solid var(--ink); border-radius: 8px; background: var(--paper); }
+.scale span.on { background: var(--coral); color: var(--white); }
+
+h2 { font-family: var(--display); font-weight: 400; font-size: 32px; margin: 8px 0 0; }
+.ans { background: var(--white); border: 3px solid var(--ink); border-radius: 20px; box-shadow: 6px 6px 0 var(--ink); padding: 4px 18px; }
+.a { display: flex; gap: 12px; padding: 12px 0; border-bottom: 2px dashed var(--dot); }
+.a:last-child { border-bottom: 0; }
+.a .mark { flex: none; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--ink); display: grid; place-items: center; font-size: 13px; font-weight: 900; margin-top: 2px; background: var(--paper); }
+.a.known .mark { background: var(--ink); color: var(--lime); }
+.a > div { min-width: 0; }
+.a .w { font-weight: 900; font-size: 17px; }
+.a .x { font-size: 14px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--white); font-weight: 700; font-size: 14px; padding: 10px 18px; border-radius: 999px; }
+.copybox { width: 100%; min-height: 120px; font-family: var(--body); font-size: 14px; border: 2px solid var(--ink); border-radius: 12px; padding: 10px; background: var(--white); color: var(--ink); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="top">
+    <span class="pill">2026 세대 판별 테스트</span>
+    <span class="count" id="count">0 / 9</span>
+  </div>
+
+  <section id="quiz" class="wrap" style="gap:20px">
+    <h1>나는 영<em>KK</em>일까?</h1>
+    <p class="sub"><b>검색 금지</b> 뜻을 아는 단어만 눌러 봐</p>
+    <div class="grid" id="grid"></div>
+    <p class="hint">한 번 더 누르면 체크가 풀려요</p>
+    <button class="btn main" id="go" type="button">결과 보기</button>
+  </section>
+
+  <section id="done" class="wrap" style="gap:20px" hidden>
+    <div class="result">
+      <div class="score" id="score">0<small>/ 9개</small></div>
+      <span class="grade" id="grade"></span>
+      <p class="desc" id="desc"></p>
+      <div class="scale" id="scale"></div>
+    </div>
+    <div class="row">
+      <button class="btn main" id="share" type="button">결과 복사하기</button>
+      <button class="btn" id="again" type="button">다시 하기</button>
+    </div>
+    <textarea class="copybox" id="copybox" readonly hidden aria-label="복사할 결과"></textarea>
+    <h2>정답 공개</h2>
+    <div class="ans" id="ans"></div>
+  </section>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const ITEMS = [
+  ["한정선", "과일을 넣은 찹쌀떡으로 유명한 디저트 브랜드"],
+  ["재혼황후", "황후 나비에의 이혼과 재혼을 그린 로맨스 판타지"],
+  ["이혼엔비혼", "A2O LITE의 ‘NEON’ 가사가 그렇게 들린 말장난"],
+  ["리센느는 몇 명?", "5명. 원이, 리브, 미나미, 메이, 제나"],
+  ["원더재빈", "숏폼 영상으로 알려진 크리에이터 석재빈"],
+  ["L을 가져가", "이마에 손으로 L자를 만들고 추는 포트나이트 춤"],
+  ["빼난지원금", "빼빼로 못 받은 친구에게 나눠주는 ‘지원금’"],
+  ["베스트프렌드 이름대기", "박자에 맞춰 가장 친한 친구를 말하는 챌린지"],
+  ["서울은 여전히 서울이고", "이별이나 추억을 담은 영상에 쓰이는 감성 문구"],
+];
+const GRADES = [
+  [9, 9, "MZ 완벽 적응", "유행이 나를 따라온다"],
+  [7, 8, "영KK", "아직 감 살아 있음"],
+  [5, 6, "젊은 감각 유지 중", "반은 알고 반은 눈치"],
+  [3, 4, "중년의 입구", "들어는 봤는데…"],
+  [1, 2, "늙KK", "요즘 애들 말 어렵다"],
+  [0, 0, "유행 공부 시작", "오늘부터 숏폼 정주행"],
+];
+const SCALE = ["0", "1~2", "3~4", "5~6", "7~8", "9"];
+const $ = (id) => document.getElementById(id);
+const known = new Set();
+
+ITEMS.forEach(([w], i) => {
+  const b = document.createElement("button");
+  b.className = "tile"; b.type = "button"; b.id = "t" + i;
+  b.setAttribute("aria-pressed", "false");
+  b.innerHTML = `<span class="n">${i + 1}</span><span class="ok">알아</span>${w}`;
+  b.onclick = () => {
+    known.has(i) ? known.delete(i) : known.add(i);
+    b.setAttribute("aria-pressed", known.has(i));
+    $("count").textContent = `${known.size} / 9`;
+  };
+  $("grid").appendChild(b);
+});
+
+function gradeOf(n) { return GRADES.find(([lo, hi]) => n >= lo && n <= hi); }
+
+$("go").onclick = () => {
+  const n = known.size, [, , g, d] = gradeOf(n);
+  $("score").innerHTML = `${n}<small>/ 9개</small>`;
+  $("grade").textContent = g;
+  $("desc").textContent = d;
+  const idx = n === 9 ? 5 : n === 0 ? 0 : Math.ceil(n / 2);
+  $("scale").innerHTML = SCALE.map((s, i) => `<span class="${i === idx ? "on" : ""}">${s}</span>`).join("");
+  $("ans").innerHTML = ITEMS.map(([w, x], i) =>
+    `<div class="a ${known.has(i) ? "known" : ""}"><span class="mark">${known.has(i) ? "✓" : i + 1}</span><div><div class="w">${w}</div><div class="x">${x}</div></div></div>`
+  ).join("");
+  $("quiz").hidden = true; $("done").hidden = false; $("copybox").hidden = true;
+  window.scrollTo(0, 0);
+};
+
+$("again").onclick = () => {
+  known.clear();
+  document.querySelectorAll(".tile").forEach((t) => t.setAttribute("aria-pressed", "false"));
+  $("count").textContent = "0 / 9";
+  $("done").hidden = true; $("quiz").hidden = false;
+  window.scrollTo(0, 0);
+};
+
+function toast(msg) {
+  const t = $("toast"); t.textContent = msg; t.hidden = false;
+  clearTimeout(toast.h); toast.h = setTimeout(() => (t.hidden = true), 1800);
+}
+
+$("share").onclick = () => {
+  const n = known.size, [, , g] = gradeOf(n);
+  const text = `[2026 세대 판별 테스트]\n나는 9개 중 ${n}개 알았어 → ${g}\n너도 검색 없이 해 봐!\nhttps://gutsy0326-svg.github.io/generation-test/`;
+  const fallback = () => {
+    const box = $("copybox"); box.value = text; box.hidden = false; box.focus(); box.select();
+    toast("글자를 길게 눌러 복사해 주세요");
+  };
+  try {
+    navigator.clipboard.writeText(text).then(() => toast("복사했어요. 카톡에 붙여넣기 하세요"), fallback);
+  } catch (e) { fallback(); }
+};
+</script>
+
+</body>
+</html>
